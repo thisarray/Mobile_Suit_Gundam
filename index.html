@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Suit Gundam</title>
+  <script src="../jsgame0.js"></script>
+  <style type="text/css" media="screen">
+body {
+  background-color: white;
+  color: black;
+}
+.hidden {
+  display: none;
+}
+#original {
+  margin-left: 1em;
+}
+  </style>
+</head>
+
+<body>
+
+<main>
+<h1>Mobile Suit Gundam</h1>
+
+<canvas id="screen">
+The game screen appears here if your browser supports the Canvas API.
+</canvas>
+<section id="controls">
+  <button type="button" id="reset">Reset</button>
+  <button type="button" id="pause">Pause</button>
+</section>
+
+<p>Regardless of what people say, humanity has a desire for war.</p>
+
+</main>
+
+<script>
+WIDTH = 800;
+HEIGHT = 600;
+
+/*
+ * Integer limit in pixels on the radius of the explosions.
+ */
+const LIMIT = 15;
+
+/*
+ * Return a random integer N such that min <= N < max.
+ */
+function getRandomInteger(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor((Math.random() * (max - min)) + min);
+}
+
+class Explosion {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.radius = 0;
+  }
+
+  draw() {
+    screen.draw.filled_circle([this.x, this.y], this.radius, 'yellow');
+  }
+
+  update() {
+    this.radius += 0.1;
+  }
+}
+
+var explosions, last;
+
+function reset() {
+  explosions = [];
+  last = null;
+}
+
+function draw() {
+  // Draw the background image
+  screen.clear();
+
+  for (let explosion of explosions) {
+    explosion.draw();
+  }
+}
+
+function update(dt) {
+  for (let explosion of explosions) {
+    explosion.update();
+  }
+  explosions = explosions.filter(e => e.radius < LIMIT);
+}
+
+function on_mouse_down(pos) {
+  if (Array.isArray(last)) {
+    let [x1, y1] = last,
+        [x2, y2] = pos;
+    last = null;
+    explosions.push(new Explosion(Math.floor((x1 + x2) / 2), Math.floor((y1 + y2) / 2)));
+    explosions.push(new Explosion(x1, y1));
+    explosions.push(new Explosion(x2, y2));
+  }
+  else {
+    last = pos;
+  }
+}
+
+window.addEventListener('load', (event) => {
+  //images.LOAD('#imageLoader img');
+  //sounds.LOAD('#soundLoader audio');
+  reset();
+  screen.set_mode('#screen', '#reset', '#pause');
+});
+</script>
+</body>
+
+</html>
