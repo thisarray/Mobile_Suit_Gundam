@@ -21,6 +21,9 @@ body {
 </head>
 
 <body>
+<section id="imageLoader" class="hidden">
+  <img class="hidden" src="images/background.png" alt="background" data-name="background">
+</section>
 
 <main>
 <h1>Mobile Suit Gundam</h1>
@@ -80,7 +83,7 @@ function reset() {
 
 function draw() {
   // Draw the background image
-  screen.clear();
+  screen.blit('background', [0, 0]);
 
   for (let explosion of explosions) {
     explosion.draw();
@@ -109,7 +112,7 @@ function on_mouse_down(pos) {
 }
 
 window.addEventListener('load', (event) => {
-  //images.LOAD('#imageLoader img');
+  images.LOAD('#imageLoader img');
   //sounds.LOAD('#soundLoader audio');
   reset();
   screen.set_mode('#screen', '#reset', '#pause');
