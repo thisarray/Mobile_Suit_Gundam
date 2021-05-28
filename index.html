@@ -24,6 +24,9 @@ body {
 <section id="imageLoader" class="hidden">
   <img class="hidden" src="images/background.png" alt="background" data-name="background">
 </section>
+<section id="soundLoader" class="hidden">
+  <audio class="hidden" controls preload="auto" src="sounds/explosion.wav" data-name="explosion">Your browser does not support the audio element.</audio>
+</section>
 
 <main>
 <h1>Mobile Suit Gundam</h1>
@@ -38,6 +41,8 @@ The game screen appears here if your browser supports the Canvas API.
 
 <p>Regardless of what people say, humanity has a desire for war.</p>
 
+<p>Sound licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported</a>.</p>
+
 </main>
 
 <script>
@@ -48,15 +53,6 @@ HEIGHT = 600;
  * Integer limit in pixels on the radius of the explosions.
  */
 const LIMIT = 15;
-
-/*
- * Return a random integer N such that min <= N < max.
- */
-function getRandomInteger(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor((Math.random() * (max - min)) + min);
-}
 
 class Explosion {
   constructor(x, y) {
@@ -90,7 +86,7 @@ function draw() {
   }
 }
 
-function update(dt) {
+function update() {
   for (let explosion of explosions) {
     explosion.update();
   }
@@ -105,6 +101,7 @@ function on_mouse_down(pos) {
     explosions.push(new Explosion(Math.floor((x1 + x2) / 2), Math.floor((y1 + y2) / 2)));
     explosions.push(new Explosion(x1, y1));
     explosions.push(new Explosion(x2, y2));
+    sounds.explosion.play();
   }
   else {
     last = pos;
@@ -113,7 +110,7 @@ function on_mouse_down(pos) {
 
 window.addEventListener('load', (event) => {
   images.LOAD('#imageLoader img');
-  //sounds.LOAD('#soundLoader audio');
+  sounds.LOAD('#soundLoader audio');
   reset();
   screen.set_mode('#screen', '#reset', '#pause');
 });
